@@ -1,8 +1,57 @@
-﻿@{
+﻿@model IQueryable<Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Sports Store.</h1>
-    
+<!-- Product List -->
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+    @foreach (var p in Model ?? Enumerable.Empty<Product>())
+    {
+        <div class="col-md-12">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@p.Name</h5>
+                    <p class="card-text">@p.Description</p>
+                    <h6 class="card-subtitle mb-2 text-muted">@p.Price.ToString("c")</h6>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-center align-items-center gap-2">
+    @if (ViewBag.CurrentPage > 1)
+    {
+        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)">
+            <i class="bi bi-chevron-left"></i> Prev
+        </a>
+    }
+
+    <div class="d-flex gap-1">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            @if (ViewBag.CurrentPage == i)
+            {
+                <a class="btn btn-danger shadow" asp-controller="Home" asp-action="Index" asp-route-page="@i">
+                    @i
+                </a>
+            }
+            else
+            {
+                <a class="btn btn-outline-secondary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@i">
+                    @i
+                </a>
+            }
+        }
+    </div>
+
+    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+    {
+        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)">
+            Next <i class="bi bi-chevron-right"></i>
+        </a>
+    }
+</div>
+

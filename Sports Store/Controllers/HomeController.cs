@@ -1,21 +1,34 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Sports_Store.Models;
+using Sports_Store.Models.ModelInterfaces;
 
 namespace Sports_Store.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IStoreInterface _interface;
+    
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IStoreInterface inter)
         {
-            _logger = logger;
+            _interface = inter;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page=1)
         {
-            return View();
+            int pageSize = 4;
+            var totalItems = _interface.Products.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var products = _interface.Products
+                .Skip((page-1) * pageSize)
+                .Take(pageSize);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(products);
         }
 
         public IActionResult Privacy()
@@ -23,10 +36,6 @@ namespace Sports_Store.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+
     }
 }

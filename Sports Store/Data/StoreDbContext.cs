@@ -36,7 +36,7 @@ namespace Sports_Store.Data
                         Id = 3,
                         Name = "Soccer Ball",
                         Description = "FIFA-approved size and weigh less",
-                        Category = "Soccer", 
+                        Category = "Soccer",
                         Price = 19.50m
                     },
                     new Product
