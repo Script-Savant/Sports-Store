@@ -28,6 +28,9 @@ namespace Sports_Store.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView("_ProductListPartial", products);
+
             return View(products);
         }
 

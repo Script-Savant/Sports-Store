@@ -1,0 +1,16 @@
+@* @model IQueryable<Product> *@
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+    @foreach (var p in Model ?? Enumerable.Empty<Product>())
+    {
+        <div class="col-md-12">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@p.Name</h5>
+                    <p class="card-text">@p.Description</p>
+                    <h6 class="card-subtitle mb-2 text-muted">@p.Price.ToString("c")</h6>
+                </div>
+            </div>
+        </div>
+    }
+</div>

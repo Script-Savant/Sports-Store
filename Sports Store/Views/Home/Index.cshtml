@@ -1,31 +1,20 @@
 ﻿@model IQueryable<Product>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<!-- Product List -->
-<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
-    @foreach (var p in Model ?? Enumerable.Empty<Product>())
-    {
-        <div class="col-md-12">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@p.Name</h5>
-                    <p class="card-text">@p.Description</p>
-                    <h6 class="card-subtitle mb-2 text-muted">@p.Price.ToString("c")</h6>
-                </div>
-            </div>
-        </div>
-    }
+<!-- Product List Placeholder -->
+<div id="product-list">
+    @await Html.PartialAsync("_ProductListPartial", Model)
 </div>
 
 <!-- Pagination -->
 <div class="d-flex justify-content-center align-items-center gap-2">
     @if (ViewBag.CurrentPage > 1)
     {
-        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)">
-            <i class="bi bi-chevron-left"></i> Prev
+        <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" data-page="@(ViewBag.CurrentPage - 1)">
+            <i class="fas fa-chevron-left"></i> Prev
         </a>
     }
 
@@ -34,13 +23,13 @@
         {
             @if (ViewBag.CurrentPage == i)
             {
-                <a class="btn btn-danger shadow" asp-controller="Home" asp-action="Index" asp-route-page="@i">
+                <a class="btn btn-danger btn-sm" asp-action="Index" asp-route-page="@i" data-page="@i">
                     @i
                 </a>
             }
             else
             {
-                <a class="btn btn-outline-secondary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@i">
+                <a class="btn btn-outline-secondary btn-sm" asp-action="Index" asp-route-page="@i" data-page="@i">
                     @i
                 </a>
             }
@@ -49,9 +38,52 @@
 
     @if (ViewBag.CurrentPage < ViewBag.TotalPages)
     {
-        <a class="btn btn-primary btn-sm" asp-controller="Home" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)">
-            Next <i class="bi bi-chevron-right"></i>
+        <a class="btn btn-primary btn-sm" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" data-page="@(ViewBag.CurrentPage + 1)">
+            Next <i class="fas fa-chevron-right"></i>
         </a>
     }
 </div>
 
+
+
+<!-- AJAX Pagination Script -->
+<script>
+    $(document).ready(function () {
+        // Handle pagination link clicks
+        $('a[data-page]').on('click', function (e) {
+            e.preventDefault(); // Prevent default link behavior
+
+            var page = $(this).data('page'); // Get the page number
+            loadProducts(page); // Load products for the selected page
+        });
+
+        // Function to load products via AJAX
+        function loadProducts(page) {
+            $.ajax({
+                url: '@Url.Action("Index")', // Controller action URL
+                type: 'GET',
+                data: { page: page }, // Pass the page number
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }, // Identify as AJAX request
+                success: function (response) {
+                    $('#product-list').html(response); // Update the product list
+                    updatePaginationLinks(page); // Update pagination links
+                },
+                error: function () {
+                    alert('An error occurred while loading the products.');
+                }
+            });
+        }
+
+        // Function to update pagination links
+        function updatePaginationLinks(currentPage) {
+            $('a[data-page]').each(function () {
+                var page = $(this).data('page');
+                if (page == currentPage) {
+                    $(this).removeClass('btn-outline-secondary').addClass('btn-danger');
+                } else {
+                    $(this).removeClass('btn-danger').addClass('btn-outline-secondary');
+                }
+            });
+        }
+    });
+</script>
