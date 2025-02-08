@@ -14,5 +14,10 @@ namespace Sports_Store.Models.ModelRepositories
         }
 
         public IQueryable<Product> Products => context.Products;
+
+        public Product GetProductById(long id)
+        {
+            return context.Products.FirstOrDefault(p => p.Id == id)!;
+        }
     }
 }

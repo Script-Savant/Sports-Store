@@ -43,7 +43,23 @@ namespace Sports_Store.Controllers
             return View(products);
         }
 
+        public IActionResult Details(long id)
+        {
+            var product = _interface.GetProductById(id);
+            if (product is null)
+                return RedirectToAction("Error", "Home");
+
+            var category = product.Category;
+            ViewBag.CurrentCategory = category;
+            
+            return View(product);
+        }
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Error()
         {
             return View();
         }
