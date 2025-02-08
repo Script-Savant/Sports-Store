@@ -17,12 +17,14 @@ namespace Sports_Store.Controllers
 
         public IActionResult Index(string? category, int page=1)
         {
+            var filteredProducts = _interface.Products
+                .Where(p => category == null || p.Category == category);
+
             int pageSize = 4;
-            var totalItems = _interface.Products.Count();
+            var totalItems = filteredProducts.Count();
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            var products = _interface.Products
-                .Where(p => category == null || p.Category == category)
+            var products = filteredProducts
                 .Skip((page-1) * pageSize)
                 .Take(pageSize);
 
@@ -33,6 +35,7 @@ namespace Sports_Store.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.Categories = categories;
+            ViewBag.CurrentCategory = category;
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 return PartialView("_ProductListPartial", products);
