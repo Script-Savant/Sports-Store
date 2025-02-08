@@ -5,9 +5,25 @@
 }
 
 <!-- Product List Placeholder -->
-<div id="product-list">
-    <partial name="_ProductListPartial"></partial>
+<div class="row">
+    <div class="col-md-4">
+        <ul class="list-group">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Home" asp-action="Index" asp-route-category="@category">
+                        @category
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>    
+
+    <div class="col-md-8">
+        <partial name="_ProductListPartial"></partial>
+    </div>
 </div>
+
 
 <!-- Pagination -->
 <div class="d-flex justify-content-center align-items-center gap-2">
