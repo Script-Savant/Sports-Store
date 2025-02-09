@@ -1,0 +1,50 @@
+@model Sports_Store.Models.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h1>Shopping Cart</h1>
+
+@if (Model.Items.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price.ToString("c")</td>
+                    <td>@((item.Product.Price * item.Quantity).ToString("c"))</td>
+                    <td>
+                        <form asp-controller="Cart" asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4>Total: @Model.CalculateTotal().ToString("c")</h4>
+        <form asp-controller="Cart" asp-action="ClearCart" method="post">
+            <button type="submit" class="btn btn-warning">Clear Cart</button>
+        </form>
+    </div>
+}

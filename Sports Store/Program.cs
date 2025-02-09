@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Sports_Store.Data;
 using Sports_Store.Models.ModelInterfaces;
 using Sports_Store.Models.ModelRepositories;
+using Sports_Store.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(co
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IStoreInterface, IStoreRepository>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CartService>();
 
 var app = builder.Build();
 
