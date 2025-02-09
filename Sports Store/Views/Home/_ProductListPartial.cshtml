@@ -1,24 +1,43 @@
 @model IQueryable<Product>
 
-<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
-    @foreach (var p in Model ?? Enumerable.Empty<Product>())
+<div class="row row-cols-1 row-cols-md-1 g-4 mb-4">
+    @if (Model.Count() < 1)
     {
-        <div class="col-md-12">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@p.Name</h5>
-                    <p class="card-text">@p.Description</p>
-                    <h6 class="card-subtitle mb-2 text-muted">@p.Price.ToString("c")</h6>
+        <h5 class="alert alert-info">No products in this site.</h5>
+    }
+    else
+    {
+        @foreach (var p in Model ?? Enumerable.Empty<Product>())
+        {
+            <div class="col">
+                <div class="row g-0">
+                    
+                    <div class="col-md-4">
+                        <img src="@(p.ProductImages.FirstOrDefault()?.ImageUrl ?? "/images/default-product.jpg")" 
+                             class="img-fluid rounded-start" 
+                             alt="@p.Name" />
+                    </div>
 
-                    <a class="btn btn-primary mt-2"
-                    asp-controller="Home"
-                    asp-action="Details"
-                    asp-route-id="@p.Id"
-                    >
-                        View Details
-                    </a>
+                    
+                    <div class="col-md-8">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@p.Name</h5>
+                                <p class="card-text">@p.Description</p>
+                                <h6 class="card-subtitle mb-2 text-muted">@p.Price.ToString("c")</h6>
+
+                                <!-- View Details Button -->
+                                <a class="btn btn-primary mt-2"
+                                   asp-controller="Home"
+                                   asp-action="Details"
+                                   asp-route-id="@p.Id">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>

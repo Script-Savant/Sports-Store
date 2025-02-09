@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Sports_Store.Data;
 using Sports_Store.Models.ModelInterfaces;
 
@@ -17,7 +18,11 @@ namespace Sports_Store.Models.ModelRepositories
 
         public Product GetProductById(long id)
         {
-            return context.Products.FirstOrDefault(p => p.Id == id)!;
+            var product = context.Products
+                .Include(p => p.ProductImages)
+                .FirstOrDefault(p => p.Id == id)!;
+                
+            return product;
         }
     }
 }

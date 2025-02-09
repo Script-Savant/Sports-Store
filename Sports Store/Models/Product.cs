@@ -14,5 +14,7 @@ namespace Sports_Store.Models
         public decimal Price { get; set; }
 
         public string Category { get; set; } = string.Empty;
+
+        public ICollection<ProductImage> ProductImages {get; set;} = new List<ProductImage>();
     }
 }
